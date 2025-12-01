@@ -1,0 +1,73 @@
+# ESTHY WAT CLEANING SERVICES LLC
+
+Full-stack web and mobile-responsive platform for **ESTHY WAT CLEANING SERVICES LLC**, designed to handle customer bookings, payments, employee management, admin & super admin dashboards, reporting, and integrations with Stripe, Twilio, and Google Maps.
+
+---
+
+## Table of Contents
+- [About](#about)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Folder Structure](#folder-structure)
+- [Installation](#installation)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+
+## About
+This platform provides a complete solution for a cleaning services company, including:
+
+- Public-facing website for customers (no login required)
+- Customer portal (optional login)
+- Employee portal (login required)
+- Admin portal (login required)
+- Super Admin portal (login required)
+- Online booking and payments
+- Role-based access control, reporting, and audit logs
+- Integration with Stripe, Twilio, and Google Maps
+
+## Features
+
+### Customer Website (Public)
+- Home, Services, Service Pages, Pricing, Booking, Reviews, FAQs, About, Contact, Careers, Blog, Policies
+- Online booking & Stripe payments (no login required)
+- Service catalog: Home, Office, Specialty cleaning
+
+### Customer Portal (Optional Login)
+- Dashboard, Appointments, Cleaning Status, Saved Addresses, Invoices & Payments, Ratings & Reviews, Messaging, Profile
+
+### Employee Portal (Login)
+- Role-based access: Digital Marketing, Cleaners, Record-Keeping, Floater
+- Dashboard, Today’s Jobs, Geo Clock In/Out, Job Checklists, Photos, Timesheets, PTO Requests, Incident Reporting, Training Center, Performance KPIs
+
+### Admin Portal (Login)
+- Scheduling & Dispatch, Customer Management, Employee Management, Job Management, Billing & Invoices, Payroll, Inventory Tracking, Reports & KPIs, Messaging, Notifications, Issue Resolution
+
+### Super Admin Portal (Login)
+- Admin User Management, System Settings, Pricing Matrix, Service Catalog Editor, Branding Manager, Integrations, Financial Reports, Audit Logs, Security Permissions
+
+## Tech Stack
+- **Frontend:** React / Next.js
+- **Backend:** Node.js / Express
+- **Database:** PostgreSQL
+- **File Storage:** AWS S3
+- **Authentication:** JWT, Secure Password Hashing, RBAC, Admin & Super Admin 2FA
+- **Integrations:** Stripe, Twilio, Google Maps
+- **Other:** HTTPS, Mobile-responsive UI
+
+## Folder Structure
+
+## Installation
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+cd backend
+npm install
+npm run start
+# Example using Sequelize
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all
+
