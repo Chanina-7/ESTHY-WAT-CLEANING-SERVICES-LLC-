@@ -1,0 +1,7 @@
+ESTHY-WAT-CLEANING-SERVICES-LLC/
+│
+├─ frontend/        # React/Next.js project
+├─ backend/         # Node.js backend
+├─ database/        # PostgreSQL migrations & seeders
+├─ docs/            # Documentation (architecture, API, manuals)
+└─ scripts/         # Deployment or setup scripts
