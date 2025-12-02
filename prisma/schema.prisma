@@ -1,0 +1,147 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- USER MANAGEMENT & RBAC ---
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  EMPLOYEE_MARKETING
+  EMPLOYEE_CLEANER
+  EMPLOYEE_RECORD_KEEPER
+  EMPLOYEE_FLOATER
+  CUSTOMER
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  phone         String?
+  role          UserRole  @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  bookings      Booking[] // For Customers
+  assignments   JobAssignment[] // For Employees
+  auditLogs     AuditLog[]
+  marketingLogs MarketingActivity[]
+  
+  // Profile specific data could be stored in separate tables or JSON
+  profile       Json?     // Stores address, preferences, bio
+}
+
+// --- SERVICE CATALOG ---
+
+model ServiceCategory {
+  id          String    @id @default(uuid())
+  name        String    // e.g., "Home", "Office", "Specialty"
+  slug        String    @unique
+  services    Service[]
+}
+
+model Service {
+  id              String          @id @default(uuid())
+  name            String
+  description     String
+  basePrice       Decimal
+  priceUnit       String          // e.g., "per hour", "flat rate", "per sqft"
+  durationMin     Int             // Estimated time in minutes
+  categoryId      String
+  category        ServiceCategory @relation(fields: [categoryId], references: [id])
+  bookings        Booking[]
+  isActive        Boolean         @default(true)
+}
+
+// --- BOOKING & JOBS ---
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Booking {
+  id              String        @id @default(uuid())
+  customerId      String
+  customer        User          @relation(fields: [customerId], references: [id])
+  serviceId       String
+  service         Service       @relation(fields: [serviceId], references: [id])
+  scheduledDate   DateTime
+  address         String
+  totalAmount     Decimal
+  status          BookingStatus @default(PENDING)
+  paymentStatus   String        // "PAID", "UNPAID", "REFUNDED"
+  stripePaymentId String?
+  
+  // Relations
+  assignments     JobAssignment[]
+  invoice         Invoice?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// --- EMPLOYEE MANAGEMENT ---
+
+model JobAssignment {
+  id          String    @id @default(uuid())
+  bookingId   String
+  booking     Booking   @relation(fields: [bookingId], references: [id])
+  employeeId  String
+  employee    User      @relation(fields: [employeeId], references: [id])
+  
+  clockIn     DateTime? // Geo Clock In
+  clockOut    DateTime? // Geo Clock Out
+  geoLat      Float?
+  geoLng      Float?
+  
+  checklist   Json?     // Checklists & Photos status
+}
+
+// --- BILLING ---
+
+model Invoice {
+  id          String   @id @default(uuid())
+  bookingId   String   @unique
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  amount      Decimal
+  issuedDate  DateTime @default(now())
+  pdfUrl      String?  // Link to S3
+  paid        Boolean  @default(false)
+}
+
+// --- SYSTEM & AUDIT ---
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  action      String
+  details     String?
+  timestamp   DateTime @default(now())
+}
+
+model MarketingActivity {
+  id          String   @id @default(uuid())
+  userId      String   // Marketing Employee
+  user        User     @relation(fields: [userId], references: [id])
+  campaignName String
+  platform    String
+  status      String
+  metrics     Json?    // Analytics data
+  createdAt   DateTime @default(now())
+}
