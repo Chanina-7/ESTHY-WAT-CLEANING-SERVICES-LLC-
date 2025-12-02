@@ -1,0 +1,3 @@
+cd esthy-wat-cleaning
+npm install prisma @prisma/client next-auth bcryptjs stripe
+npm install -D prisma
